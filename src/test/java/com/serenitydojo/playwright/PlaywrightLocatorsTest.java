@@ -2,6 +2,7 @@ package com.serenitydojo.playwright;
 
 import com.microsoft.playwright.*;
 import com.microsoft.playwright.assertions.PlaywrightAssertions;
+import com.microsoft.playwright.options.AriaRole;
 import com.microsoft.playwright.options.LoadState;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.Execution;
@@ -261,13 +262,27 @@ public class PlaywrightLocatorsTest {
         @DisplayName("filtering locators by text")
         @Test
         void filteringMenuItems() {
-            // TODO: Make it so
+            page.getByRole(AriaRole.MENU, new Page.GetByRoleOptions().setName("Main Menu"))
+                            .getByRole(AriaRole.MENUITEM, new Locator.GetByRoleOptions()
+                                    .setName("Home")).click();
+            page.getByRole(AriaRole.MENUBAR, new Page.GetByRoleOptions().setName("Main Menu"))
+                    .getByText("Home").click();
         }
 
         @DisplayName("filtering locators by locator")
         @Test
         void filteringMenuItemsByLocator() {
-            // TODO: Make it so
+            List<String> allProductsHasText = page.getByTestId("product-name")
+                    .filter(new Locator.FilterOptions().setHasText("Sander"))
+                    .allTextContents();
+            List<String> allProductsHasNotText = page.getByTestId("product-name")
+                    .filter(new Locator.FilterOptions().setHasNotText("Sander"))
+                    .allTextContents();
+            List<String> OutOfStockProducts = page.locator(".card")
+                    .filter(new Locator.FilterOptions().setHas(page.getByText("Out of stock")))
+                    .getByTestId("product-name")
+                    .allTextContents();
+
         }
     }
 
