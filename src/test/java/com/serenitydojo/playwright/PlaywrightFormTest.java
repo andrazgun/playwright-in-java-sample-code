@@ -80,6 +80,8 @@ public class PlaywrightFormTest {
             Assertions.assertThat(alert.textContent().trim())
                     .as("Incorrect text.")
                     .isEqualToIgnoringCase("Thanks for your message! We will contact you shortly.");
+            PlaywrightAssertions.assertThat(alert).hasText("Thanks for your message! We will contact you shortly.");
+            PlaywrightAssertions.assertThat(alert).isVisible();
         }
 
         @DisplayName("Mandatory fields")
@@ -137,7 +139,7 @@ public class PlaywrightFormTest {
             assertThat(firstNameField).hasValue(text);
         }
 
-        private static Map<String, String> loadFormData(String filePath) {
+        protected static Map<String, String> loadFormData(String filePath) {
             Map<String, String> data = new HashMap<>();
             try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
                 String line;
@@ -167,6 +169,5 @@ public class PlaywrightFormTest {
                         .isEqualToIgnoringCase(expected);
             });
         }
-
     }
 }
