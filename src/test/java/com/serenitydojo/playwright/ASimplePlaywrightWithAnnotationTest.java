@@ -11,8 +11,8 @@ import java.util.Arrays;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-@UsePlaywright(ASimplePlaywrightTestWithAnnotationTest.MyOptions.class)
-public class ASimplePlaywrightTestWithAnnotationTest {
+@UsePlaywright(ASimplePlaywrightWithAnnotationTest.MyOptions.class)
+public class ASimplePlaywrightWithAnnotationTest {
 
     public static class MyOptions implements OptionsFactory {
         @Override
