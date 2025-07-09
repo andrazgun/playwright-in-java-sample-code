@@ -1,0 +1,9 @@
+firstName=Ioana
+lastName=Dan
+email=ioana@example.com
+message=One morning, when Gregor Samsa woke from troubled.
+firstNameErrorMsg=First name is required
+lastNameErrorMsg=Last name is required
+emailErrorMsg=Email is required
+subjectErrorMsg=Subject is required
+messageErrorMsg=Message is required
