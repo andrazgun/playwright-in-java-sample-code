@@ -1,4 +1,4 @@
-package com.serenitydojo.playwright;
+package com.serenitydojo.playwright.toolshop.domain;
 
 /*
 {
@@ -23,7 +23,7 @@ import net.datafaker.providers.base.Text;
 
 import java.util.Locale;
 
-import static com.serenitydojo.playwright.Address.randomAddress;
+import static com.serenitydojo.playwright.toolshop.domain.Address.randomAddress;
 import static net.datafaker.providers.base.Text.*;
 
 public record User(String first_name,
@@ -80,6 +80,17 @@ public record User(String first_name,
                         .with(DEFAULT_SPECIAL, 2)
                         .build()),
                 null
+        );
+    }
+
+    public User randomUserWithSpecificPassword(String password) {
+        return new User(this.first_name,
+                this.last_name,
+                this.address,
+                this.phone,
+                this.dob,
+                password,
+                this.email
         );
     }
 }

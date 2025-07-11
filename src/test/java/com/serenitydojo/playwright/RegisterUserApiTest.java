@@ -7,6 +7,7 @@ import com.microsoft.playwright.APIRequestContext;
 import com.microsoft.playwright.Playwright;
 import com.microsoft.playwright.junit.UsePlaywright;
 import com.microsoft.playwright.options.RequestOptions;
+import com.serenitydojo.playwright.toolshop.domain.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,11 +20,15 @@ public class RegisterUserApiTest {
     private APIRequestContext request;
     private Gson gson = new Gson();
 
+    private static final String BASE_URL = "https://api.practicesoftwaretesting.com";
+    private static final String REGISTER_ENDPOINT = "/users/register";
+    private static final String CONTENT_TYPE_JSON = "application/json";
+
     @BeforeEach
     void setup(Playwright playwright) {
         request = playwright.request().newContext(
                 new APIRequest.NewContextOptions()
-                        .setBaseURL("https://api.practicesoftwaretesting.com")
+                        .setBaseURL(BASE_URL)
         );
     }
 
@@ -38,9 +43,9 @@ public class RegisterUserApiTest {
     void shouldRegisterUser() {
         User requestUser = User.randomUser();
 
-        var response = request.post("/users/register",
+        var response = request.post(REGISTER_ENDPOINT,
                 RequestOptions.create()
-                        .setHeader("Content-Type", "application/json")
+                        .setHeader("Content-Type", CONTENT_TYPE_JSON)
                         .setData(requestUser)
         );
 
@@ -65,7 +70,7 @@ public class RegisterUserApiTest {
             softly.assertThat(responseObject.has("password"))
                     .as("No password should be returned")
                     .isFalse();
-            softly.assertThat(response.headers().get("content-type")).contains("application/json");
+            softly.assertThat(response.headers().get("content-type")).contains(CONTENT_TYPE_JSON);
         });
     }
 
@@ -73,9 +78,9 @@ public class RegisterUserApiTest {
     void emailIsRequired() {
         User requestUser = User.randomUserWithNoEmail();
 
-        var response = request.post("/users/register",
+        var response = request.post(REGISTER_ENDPOINT,
                 RequestOptions.create()
-                        .setHeader("Content-Type", "application/json")
+                        .setHeader("Content-Type", CONTENT_TYPE_JSON)
                         .setData(requestUser)
         );
 
