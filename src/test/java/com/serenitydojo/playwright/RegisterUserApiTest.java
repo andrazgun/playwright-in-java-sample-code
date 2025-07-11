@@ -7,15 +7,17 @@ import com.microsoft.playwright.APIRequestContext;
 import com.microsoft.playwright.Playwright;
 import com.microsoft.playwright.junit.UsePlaywright;
 import com.microsoft.playwright.options.RequestOptions;
-import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @UsePlaywright
 public class RegisterUserApiTest {
 
     private APIRequestContext request;
+    private Gson gson = new Gson();
 
     @BeforeEach
     void setup(Playwright playwright) {
@@ -43,12 +45,10 @@ public class RegisterUserApiTest {
         );
 
         String responseBody = response.text();
-        Gson gson = new Gson();
         User responseUser = gson.fromJson(responseBody, User.class);
-
         JsonObject responseObject = gson.fromJson(responseBody, JsonObject.class);
 
-        SoftAssertions.assertSoftly(softly -> {
+        assertSoftly(softly -> {
             softly.assertThat(response.status())
                     .as("Should return 201 status code")
                     .isEqualTo(201);
@@ -66,27 +66,33 @@ public class RegisterUserApiTest {
                     .as("No password should be returned")
                     .isFalse();
             softly.assertThat(response.headers().get("content-type")).contains("application/json");
-
         });
+    }
 
+    @Test
+    void emailIsRequired() {
+        User requestUser = User.randomUserWithNoEmail();
 
+        var response = request.post("/users/register",
+                RequestOptions.create()
+                        .setHeader("Content-Type", "application/json")
+                        .setData(requestUser)
+        );
 
-        /*{
-    "address": {
-        "city": "Davidmouth",
-        "country": "Vanuatu",
-        "postal_code": "36852",
-        "state": "Florida",
-        "street": "18074 Weimann Valleys"
-    },
-    "created_at": "2025-07-11 10:58:50",
-    "dob": "1976-06-04",
-    "email": "leslie.larkin@hotmail.com",
-    "first_name": "Sean",
-    "id": "01jzwj6m8ehh2w8z8jcxf923vw",
-    "last_name": "Lueilwitz",
-    "phone": "031 0636"
-}*/
+        String responseBody = response.text();
+        JsonObject responseObject = gson.fromJson(responseBody, JsonObject.class);
 
+        assertSoftly(softly -> {
+            softly.assertThat(response.status())
+                    .as("Should return 422 status code")
+                    .isEqualTo(422);
+
+            softly.assertThat(responseObject.has("email")).isTrue();
+
+            String emailErrorMessage = responseObject.get("email").getAsString();
+            softly.assertThat(emailErrorMessage)
+                    .as("Error message is incorrect")
+                    .isEqualTo("The email field is required.");
+        });
     }
 }

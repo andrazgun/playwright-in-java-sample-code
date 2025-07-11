@@ -17,7 +17,6 @@ import java.util.stream.Stream;
 
 public class PlaywrightRestAPITest {
 
-
     protected static Playwright playwright;
     protected static Browser browser;
     protected static BrowserContext browserContext;

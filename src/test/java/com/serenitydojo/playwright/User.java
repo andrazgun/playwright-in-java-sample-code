@@ -63,4 +63,23 @@ public record User(String first_name,
                 email
         );
     }
+
+    public static User randomUserWithNoEmail() {
+        Faker fake = new Faker(new Locale("ro"));
+        return new User(
+                fake.name().firstName(),
+                fake.name().lastName(),
+                randomAddress(),
+                fake.phoneNumber().phoneNumber(),
+                fake.timeAndDate().birthday(18, 50, "yyyy-MM-dd"),
+                fake.text().text(Text.TextSymbolsBuilder.builder()
+                        .len(8)
+                        .with(EN_UPPERCASE, 1)
+                        .with(EN_LOWERCASE,2)
+                        .with(DIGITS, 1)
+                        .with(DEFAULT_SPECIAL, 2)
+                        .build()),
+                null
+        );
+    }
 }
