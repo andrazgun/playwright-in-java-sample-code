@@ -48,5 +48,4 @@ public abstract class PlaywrightTestCase {
         playwright.get().close();
         playwright.remove();
     }
-
 }
