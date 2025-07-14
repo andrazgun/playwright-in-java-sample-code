@@ -31,6 +31,15 @@ public class PlaywrightPageObjectTest extends PlaywrightTestCase {
     @Nested
     class WhenSearchingProductsByKeyword {
 
+        WhenAddingItemsToCart.SearchComponent searchComponent;
+        WhenAddingItemsToCart.ProductList productList;
+
+        @BeforeEach
+        void setUp() {
+            searchComponent = new WhenAddingItemsToCart.SearchComponent(page);
+            productList = new WhenAddingItemsToCart.ProductList(page);
+        }
+
         @DisplayName("Search Without Page Objects")
         @Test
         void withoutPageObjects01() {
@@ -46,14 +55,31 @@ public class PlaywrightPageObjectTest extends PlaywrightTestCase {
         @DisplayName("Search With Page Objects")
         @Test
         void withPageObjects01() {
-            SearchComponent searchComponent = new SearchComponent(page);
-            ProductList productList = new ProductList(page);
 
             searchComponent.searchBy("tape");
             var matchingProducts = productList.getProductName();
 
             Assertions.assertThat(matchingProducts)
                     .contains("Tape Measure 7.5m", "Measuring Tape", "Tape Measure 5m");
+        }
+    }
+
+    @Nested
+    class WhenAddingItemsToCart {
+
+        SearchComponent searchComponent;
+        ProductList productList;
+        ProductDetails productDetails;
+        NavBar navBar;
+        CheckoutCart checkoutCart;
+
+        @BeforeEach
+        void setUp() {
+            searchComponent = new SearchComponent(page);
+            productList = new ProductList(page);
+            productDetails = new ProductDetails(page);
+            navBar = new NavBar(page);
+            checkoutCart = new CheckoutCart(page);
         }
 
         @DisplayName("Add to cart Without Page Objects")
@@ -113,7 +139,34 @@ public class PlaywrightPageObjectTest extends PlaywrightTestCase {
                     });
         }
 
-        class ProductDetails {
+        @DisplayName("Checking out multiple items")
+        @Test
+        void whenCheckingOutMultipleItems() {
+            productList.viewProductDetails("Bolt Cutters");
+            productDetails.increaseQuantity(2);
+            productDetails.addToCart();
+
+            navBar.openHomepage();
+            productList.viewProductDetails("Claw hammer with Shock Reduction Grip");
+            productDetails.addToCart();
+            navBar.openCart();
+
+            List<CartLineItem> lineItems = checkoutCart.getLineItem();
+            Assertions.assertThat(lineItems).hasSize(2);
+
+            List<String> productNames = lineItems.stream().map(CartLineItem::title).toList();
+            Assertions.assertThat(productNames).contains("Bolt Cutters", "Claw Hammer with Shock Reduction Grip");
+
+            Assertions.assertThat(lineItems)
+                    .allSatisfy(item -> {
+                        Assertions.assertThat(item.quantity()).isGreaterThanOrEqualTo(1);
+                        Assertions.assertThat(item.price()).isGreaterThan(0.0);
+                        Assertions.assertThat(item.total()).isGreaterThan(1.0);
+                        Assertions.assertThat(item.total()).isEqualTo(item.quantity() * item.price());
+                    });
+        }
+
+        static class ProductDetails {
             private final Page page;
 
             public ProductDetails(Page page) {
@@ -137,7 +190,7 @@ public class PlaywrightPageObjectTest extends PlaywrightTestCase {
             }
         }
 
-        class SearchComponent {
+        static class SearchComponent {
             private final Page page;
 
             public SearchComponent(Page page) {
@@ -152,7 +205,7 @@ public class PlaywrightPageObjectTest extends PlaywrightTestCase {
             }
         }
 
-        class ProductList {
+        static class ProductList {
 
             private final Page page;
 
@@ -169,7 +222,7 @@ public class PlaywrightPageObjectTest extends PlaywrightTestCase {
             }
         }
 
-        class NavBar {
+        static class NavBar {
             private final Page page;
 
             public NavBar(Page page) {
@@ -179,12 +232,16 @@ public class PlaywrightPageObjectTest extends PlaywrightTestCase {
             public void openCart() {
                 page.getByTestId("nav-cart").click();
             }
+
+            public void openHomepage() {
+                page.getByTestId("nav-home").click();
+            }
         }
 
         record CartLineItem(String title, int quantity, double price, double total) {
         }
 
-        class CheckoutCart {
+        static class CheckoutCart {
             private final Page page;
 
             public CheckoutCart(Page page) {
@@ -193,18 +250,22 @@ public class PlaywrightPageObjectTest extends PlaywrightTestCase {
 
 
             public List<CartLineItem> getLineItem() {
-                page.locator("app-cart tbody tr").waitFor();
+                page.locator("app-cart tbody tr").first().waitFor();
                 return page.locator("app-cart tbody tr").all()
                         .stream()
                         .map(
                                 row -> {
-                                    String title = row.getByTestId("product-title").innerText();
+                                    String title = trimmed(row.getByTestId("product-title").innerText());
                                     int quantity = Integer.parseInt(row.getByTestId("product-quantity").inputValue());
                                     double price = Double.parseDouble(price(row.getByTestId("product-price").innerText()));
                                     double linePrice = Double.parseDouble(price(row.getByTestId("line-price").innerText()));
                                     return new CartLineItem(title, quantity, price, linePrice);
                                 }
                         ).toList();
+            }
+
+            private String trimmed(String value) {
+                return value.strip().replaceAll("\u00A0", "");
             }
 
             private String price(String value) {
