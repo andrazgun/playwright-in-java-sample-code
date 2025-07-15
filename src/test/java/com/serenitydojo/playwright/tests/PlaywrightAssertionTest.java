@@ -1,4 +1,4 @@
-package com.serenitydojo.playwright;
+package com.serenitydojo.playwright.tests;
 
 import com.microsoft.playwright.Locator;
 import com.microsoft.playwright.Page;
@@ -6,13 +6,16 @@ import com.microsoft.playwright.assertions.PlaywrightAssertions;
 import com.microsoft.playwright.junit.UsePlaywright;
 import com.microsoft.playwright.options.LoadState;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
-import static com.serenitydojo.playwright.PlaywrightFormTest.WhenInteractingWithTextFields.loadFormData;
+import static com.serenitydojo.playwright.tests.PlaywrightFormTest.WhenInteractingWithTextFields.loadFormData;
 
 @UsePlaywright(HeadlessChromeOption.class)
 public class PlaywrightAssertionTest {

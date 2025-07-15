@@ -1,13 +1,15 @@
 package com.serenitydojo.playwright.toolshop.catalog;
 
+import com.microsoft.playwright.BrowserContext;
 import com.microsoft.playwright.Page;
+import com.microsoft.playwright.Tracing;
 import com.microsoft.playwright.junit.UsePlaywright;
-import com.serenitydojo.playwright.HeadlessChromeOption;
+import com.serenitydojo.playwright.tests.HeadlessChromeOption;
 import com.serenitydojo.playwright.toolshop.catalog.pageobjects.*;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+
+import java.nio.file.Paths;
 
 @UsePlaywright(HeadlessChromeOption.class) //extends PlaywrightTestCase not needed if this annotation is used
 @DisplayName("Searching for products")
@@ -31,6 +33,27 @@ public class SearchForProductTest {
         productDetails = new ProductDetails(page);
         navBar = new NavBar(page);
         checkoutCart = new CheckoutCart(page);
+    }
+
+    @BeforeEach
+    void setupTrace(BrowserContext context) {
+        context.tracing().start(
+                new Tracing.StartOptions()
+                        .setScreenshots(true)
+                        .setSnapshots(true)
+                        .setSources(true)
+        );
+    }
+
+    @AfterEach
+    void recordTrace(TestInfo testInfo, BrowserContext context) {
+        String traceName = testInfo.getDisplayName().replace(" ", "-").toLowerCase();
+        context.tracing().stop(
+                new Tracing.StopOptions()
+                        .setPath(Paths.get("target/traces/trace-" + traceName + ".zip"))
+        );
+//        to see the trace execute in CLI: npx playwright show-trace "trace file"
+//        or go to https://trace.playwright.dev/ and open the trace file
     }
 
     @DisplayName("Search With Page Objects")
