@@ -6,6 +6,9 @@ import com.microsoft.playwright.Tracing;
 import com.microsoft.playwright.junit.UsePlaywright;
 import com.serenitydojo.playwright.tests.HeadlessChromeOption;
 import com.serenitydojo.playwright.toolshop.catalog.pageobjects.*;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Step;
+import io.qameta.allure.Story;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 
@@ -13,6 +16,8 @@ import java.nio.file.Paths;
 import java.util.List;
 
 @UsePlaywright(HeadlessChromeOption.class)
+@DisplayName("Shopping cart")
+@Feature("Cart")
 public class AddToCartTest {
 
     SearchComponent searchComponent;
@@ -22,6 +27,7 @@ public class AddToCartTest {
     CheckoutCart checkoutCart;
 
     @BeforeEach
+    @Step
     void openHomePage(Page page) {
         page.navigate("https://practicesoftwaretesting.com");
     }
@@ -57,6 +63,7 @@ public class AddToCartTest {
     }
 
     @DisplayName("Add to cart With Page Objects")
+    @Story("Add to cart")
     @Test
     void withPageObjects02() {
 

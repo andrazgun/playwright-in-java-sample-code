@@ -3,12 +3,15 @@ package com.serenitydojo.playwright.toolshop.login;
 import com.microsoft.playwright.assertions.PlaywrightAssertions;
 import com.serenitydojo.playwright.toolshop.domain.User;
 import com.serenitydojo.playwright.toolshop.fixtures.PlaywrightTestCase;
+import io.qameta.allure.Feature;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static com.serenitydojo.playwright.toolshop.domain.User.randomUser;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+@DisplayName("Login tests")
+@Feature("Contact Form")
 public class LoginWithRegisteredUserTest extends PlaywrightTestCase {
 
     @Test
@@ -21,11 +24,11 @@ public class LoginWithRegisteredUserTest extends PlaywrightTestCase {
 
 //        Login via LoginPage
         LoginPage loginPage = new LoginPage(page);
-        loginPage.open();
+        loginPage.openLoginPage();
         loginPage.loginAs(user);
 
         //        Check that we are on the right page
-        assertThat(loginPage.title())
+        assertThat(loginPage.getPageTitle())
                 .as("Page title is incorrect.")
                 .isEqualTo("My account");
     }
@@ -40,7 +43,7 @@ public class LoginWithRegisteredUserTest extends PlaywrightTestCase {
 
 //        Login via LoginPage
         LoginPage loginPage = new LoginPage(page);
-        loginPage.open();
+        loginPage.openLoginPage();
         loginPage.loginAs(user.randomUserWithSpecificPassword("wrong-password"));
 
         //        Check that we are on the right page

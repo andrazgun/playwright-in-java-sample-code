@@ -1,6 +1,7 @@
 package com.serenitydojo.playwright.toolshop.catalog.pageobjects;
 
 import com.microsoft.playwright.Page;
+import io.qameta.allure.Step;
 
 public class NavBar {
 
@@ -10,10 +11,12 @@ public class NavBar {
         this.page = page;
     }
 
+    @Step
     public void openCart() {
         page.getByTestId("nav-cart").click();
     }
 
+    @Step
     public void openHomepage() {
         page.getByTestId("nav-home").click();
     }

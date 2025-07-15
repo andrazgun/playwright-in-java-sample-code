@@ -5,6 +5,7 @@ import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.AriaRole;
 import com.serenitydojo.playwright.toolshop.domain.User;
 import com.serenitydojo.playwright.toolshop.fixtures.PlaywrightTestCase;
+import io.qameta.allure.Step;
 
 public class LoginPage extends PlaywrightTestCase {
     private final Page page;
@@ -13,24 +14,29 @@ public class LoginPage extends PlaywrightTestCase {
         this.page = page;
     }
 
-    public void open() {
+    @Step
+    public void openLoginPage() {
         page.navigate("https://www.practicesoftwaretesting.com/auth/login");
     }
 
+    @Step
     public void loginAs(User user) {
         page.getByPlaceholder("Your email").fill(user.email());
         page.getByPlaceholder("Your password").fill(user.password());
         page.getByRole(AriaRole.BUTTON, new Page.GetByRoleOptions().setName("Login")).click();
     }
 
-    public String title() {
+    @Step
+    public String getPageTitle() {
         return page.getByTestId("page-title").textContent();
     }
 
+    @Step
     public String getAlertText() {
         return page.getByTestId("login-error").textContent().trim();
     }
 
+    @Step
     public Locator getAlert() {
         return page.getByTestId("login-error");
     }

@@ -6,13 +6,16 @@ import com.microsoft.playwright.Tracing;
 import com.microsoft.playwright.junit.UsePlaywright;
 import com.serenitydojo.playwright.tests.HeadlessChromeOption;
 import com.serenitydojo.playwright.toolshop.catalog.pageobjects.*;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Step;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 
 import java.nio.file.Paths;
 
 @UsePlaywright(HeadlessChromeOption.class) //extends PlaywrightTestCase not needed if this annotation is used
-@DisplayName("Searching for products")
+@DisplayName("Search by keyword")
+@Feature("Product catalog")
 public class SearchForProductTest {
 
     SearchComponent searchComponent;
@@ -22,6 +25,7 @@ public class SearchForProductTest {
     CheckoutCart checkoutCart;
 
     @BeforeEach
+    @Step
     void openHomePage(Page page) {
         page.navigate("https://practicesoftwaretesting.com");
     }

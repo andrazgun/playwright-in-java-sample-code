@@ -3,6 +3,7 @@ package com.serenitydojo.playwright.toolshop.login;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.RequestOptions;
 import com.serenitydojo.playwright.toolshop.domain.User;
+import io.qameta.allure.Step;
 
 public class UserAPIClient {
 
@@ -15,6 +16,7 @@ public class UserAPIClient {
         this.page = page;
     }
 
+    @Step
     public void registerUser(User user) {
 
         var response = page.request().post(

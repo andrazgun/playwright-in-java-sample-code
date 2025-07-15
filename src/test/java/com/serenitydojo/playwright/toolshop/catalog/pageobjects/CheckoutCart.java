@@ -1,6 +1,7 @@
 package com.serenitydojo.playwright.toolshop.catalog.pageobjects;
 
 import com.microsoft.playwright.Page;
+import io.qameta.allure.Step;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ public class CheckoutCart {
         this.page = page;
     }
 
+    @Step
     public List<CartLineItem> getLineItem() {
         page.locator("app-cart tbody tr").first().waitFor();
         return page.locator("app-cart tbody tr").all()

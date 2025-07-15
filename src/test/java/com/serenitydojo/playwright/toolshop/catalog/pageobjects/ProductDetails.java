@@ -2,6 +2,7 @@ package com.serenitydojo.playwright.toolshop.catalog.pageobjects;
 
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.AriaRole;
+import io.qameta.allure.Step;
 
 public class ProductDetails {
 
@@ -11,12 +12,14 @@ public class ProductDetails {
         this.page = page;
     }
 
+    @Step
     public void increaseQuantity(int quantity) {
         for (int i = 1; i <= quantity; i++) {
             page.getByTestId("increase-quantity").click();
         }
     }
 
+    @Step
     public void addToCart() {
         page.waitForResponse(
                 response -> response.url().contains("/carts") && response.request().method().equals("POST"),
