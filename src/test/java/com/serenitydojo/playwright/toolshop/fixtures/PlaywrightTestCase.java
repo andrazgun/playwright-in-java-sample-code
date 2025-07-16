@@ -7,6 +7,8 @@ import org.junit.jupiter.api.BeforeEach;
 
 import java.util.Arrays;
 
+import static com.serenitydojo.playwright.toolshop.fixtures.ScreenshotManager.takeScreenshot;
+
 public abstract class PlaywrightTestCase {
 
     protected static ThreadLocal<Playwright> playwright
@@ -37,6 +39,7 @@ public abstract class PlaywrightTestCase {
 
     @AfterEach
     void closeContext() {
+        takeScreenshot(page,"End of test");
         browserContext.close();
     }
 

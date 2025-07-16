@@ -30,7 +30,7 @@ public class LoginWithRegisteredUserTest extends PlaywrightTestCase {
         //        Check that we are on the right page
         assertThat(loginPage.getPageTitle())
                 .as("Page title is incorrect.")
-                .isEqualTo("My account");
+                .isEqualTo("His account");
     }
 
     @Test

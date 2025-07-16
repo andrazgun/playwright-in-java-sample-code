@@ -7,6 +7,8 @@ import com.serenitydojo.playwright.toolshop.domain.User;
 import com.serenitydojo.playwright.toolshop.fixtures.PlaywrightTestCase;
 import io.qameta.allure.Step;
 
+import static com.serenitydojo.playwright.toolshop.fixtures.ScreenshotManager.takeScreenshot;
+
 public class LoginPage extends PlaywrightTestCase {
     private final Page page;
 
@@ -28,11 +30,13 @@ public class LoginPage extends PlaywrightTestCase {
 
     @Step
     public String getPageTitle() {
+        takeScreenshot(page, "get page title");
         return page.getByTestId("page-title").textContent();
     }
 
     @Step
     public String getAlertText() {
+        takeScreenshot(page, "get Alert text");
         return page.getByTestId("login-error").textContent().trim();
     }
 
