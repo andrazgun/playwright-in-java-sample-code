@@ -14,7 +14,7 @@ public class ProductList {
     }
 
     @Step
-    public List<String> getProductName() {
+    public List<String> getProductNameList() {
         return page.getByTestId("product-name").allInnerTexts();
     }
 

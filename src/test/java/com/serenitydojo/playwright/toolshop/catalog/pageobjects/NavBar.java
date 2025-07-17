@@ -18,6 +18,8 @@ public class NavBar {
 
     @Step
     public void openHomepage() {
-        page.getByTestId("nav-home").click();
+        page.navigate("https://practicesoftwaretesting.com");
+
+//        page.getByTestId("nav-home").click();
     }
 }

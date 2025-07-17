@@ -65,7 +65,7 @@ public class SearchForProductTest {
     void withPageObjects01() {
 
         searchComponent.searchBy("tape");
-        var matchingProducts = productList.getProductName();
+        var matchingProducts = productList.getProductNameList();
 
         Assertions.assertThat(matchingProducts)
                 .contains("Tape Measure 7.5m", "Measuring Tape", "Tape Measure 5m");
@@ -76,7 +76,7 @@ public class SearchForProductTest {
     void whenThereIsNoMatchingProduct() {
         searchComponent.searchBy("unknown");
 
-        var matchingProducts = productList.getProductName();
+        var matchingProducts = productList.getProductNameList();
 
         Assertions.assertThat(matchingProducts).isEmpty();
         Assertions.assertThat(productList.getSearchCompletedMessage()).contains("There are no products found.");
@@ -87,12 +87,12 @@ public class SearchForProductTest {
     void clearingTheSearchResults() {
         searchComponent.searchBy("saw");
 
-        var matchingFilteredProducts = productList.getProductName();
+        var matchingFilteredProducts = productList.getProductNameList();
         Assertions.assertThat(matchingFilteredProducts).hasSize(2);
 
         searchComponent.clearSearch();
 
-        var matchingProducts = productList.getProductName();
+        var matchingProducts = productList.getProductNameList();
         Assertions.assertThat(matchingProducts).hasSize(9);
     }
 }

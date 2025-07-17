@@ -74,7 +74,7 @@ public class PlaywrightFormTest {
             PlaywrightAssertions.assertThat(subjectOption).hasValue(subject);
 
             String inputValue = uploadAttachment.inputValue();
-            Assertions.assertThat(inputValue).endsWith("fileForAttachment.txt");
+            Assertions.assertThat(inputValue).endsWith("data/fileForAttachment.txt");
 
             submitBtn.click();
             Assertions.assertThat(alert.textContent().trim())
